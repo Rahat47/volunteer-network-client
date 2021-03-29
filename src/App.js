@@ -1,9 +1,17 @@
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Home from './components/home/Home'
+
 
 function App() {
   return (
-    <div >
+    <Router>
 
-    </div>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
