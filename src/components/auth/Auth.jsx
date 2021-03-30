@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import {
     Grid,
     Header,
@@ -9,7 +10,9 @@ import {
     Message,
     Divider,
 } from "semantic-ui-react";
+import { VnetworkContext } from "../../App";
 import logo from "../../images/logo.png";
+import { fbaseFacebookSignIn, fbaseGoogleSignin } from "./firebase/authManager";
 const initialState = {
     fullName: "",
     email: "",
@@ -21,6 +24,9 @@ const Auth = () => {
     const [isSignUp, setIsSignUp] = useState(false);
 
     const [formData, setFromData] = useState(initialState);
+
+    const { loggedInUser, setLoggedInUser } = useContext(VnetworkContext);
+    console.log(loggedInUser);
 
     const handleSwtich = () => {
         setIsSignUp(prevMode => !prevMode);
@@ -34,6 +40,11 @@ const Auth = () => {
     const handleChange = e => {
         setFromData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const handleSignIn = user => {
+        setLoggedInUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+    };
     return (
         <Grid
             textAlign="center"
@@ -42,6 +53,8 @@ const Auth = () => {
         >
             <Grid.Column style={{ maxWidth: 450 }}>
                 <Image
+                    as={Link}
+                    to="/"
                     centered
                     src={logo}
                     alt="Logo"
@@ -136,6 +149,40 @@ const Auth = () => {
                         </Button>{" "}
                     </Message>
                 )}
+                <Message>
+                    Or Continue With...
+                    <Divider hidden />
+                    <div>
+                        <Button
+                            circular
+                            color="facebook"
+                            icon="facebook"
+                            onClick={async () => {
+                                try {
+                                    const user = await fbaseFacebookSignIn();
+                                    handleSignIn(user);
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }}
+                        />
+                        <Button circular secondary icon="github" />
+
+                        <Button
+                            circular
+                            color="google plus"
+                            icon="google"
+                            onClick={async () => {
+                                try {
+                                    const user = await fbaseGoogleSignin();
+                                    handleSignIn(user);
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }}
+                        />
+                    </div>
+                </Message>
             </Grid.Column>
         </Grid>
     );
