@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/home/Home'
-
+import Auth from './components/auth/Auth'
 
 function App() {
   return (
@@ -10,6 +10,8 @@ function App() {
         <Route exact path="/">
           <Home />
         </Route>
+
+        <Route exact path="/auth" component={Auth} />
       </Switch>
     </Router>
   );
